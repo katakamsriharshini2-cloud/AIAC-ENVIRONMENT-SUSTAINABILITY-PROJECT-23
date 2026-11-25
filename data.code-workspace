@@ -1,0 +1,19 @@
+{
+	"folders": [
+		{
+			"path": "data"
+		},
+		{
+			"path": "docs"
+		},
+		{
+			"path": "frontend"
+		},
+		{
+			"path": "New folder"
+		},
+		{
+			"path": "postman"
+		}
+	]
+}

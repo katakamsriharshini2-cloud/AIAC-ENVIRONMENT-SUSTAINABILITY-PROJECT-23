@@ -1,0 +1,55 @@
+version: '3.8'
+
+services:
+  db:
+    image: postgres:15-alpine
+    container_name: ecosphere_postgres
+    restart: always
+    environment:
+      POSTGRES_DB: ecosphere_db
+      POSTGRES_USER: ecosphere_user
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-EcospherePostgres2026!}
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ecosphere_user -d ecosphere_db"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: ecosphere_backend_prod
+    restart: always
+    ports:
+      - "8000:8000"
+    environment:
+      - DATABASE_URL=postgresql://ecosphere_user:${POSTGRES_PASSWORD:-EcospherePostgres2026!}@db:5432/ecosphere_db
+      - SECRET_KEY=${SECRET_KEY:-ecosphere_super_secret_jwt_key_2026_academic_production}
+      - OPENAQ_API_KEY=${OPENAQ_API_KEY:-}
+      - DATA_GOV_IN_API_KEY=${DATA_GOV_IN_API_KEY:-}
+      - ENABLE_BACKGROUND_SCHEDULER=true
+      - DEFAULT_LOCATION_NAME=Warangal
+      - DEFAULT_LATITUDE=17.9689
+      - DEFAULT_LONGITUDE=79.5941
+    depends_on:
+      db:
+        condition: service_healthy
+
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    container_name: ecosphere_frontend_prod
+    restart: always
+    ports:
+      - "80:80"
+    depends_on:
+      - backend
+
+volumes:
+  postgres_data:

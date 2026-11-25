@@ -1,0 +1,245 @@
+{
+  "info": {
+    "name": "ECOSPHERE AI - Environmental API Collection",
+    "description": "Comprehensive Postman collection for ECOSPHERE AI. Covers Auth, Stations, Air Quality, Water Quality, Weather, IoT, AI/ML, Optimization, and Public Citizen Portal.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    { "key": "baseUrl", "value": "http://localhost:8000", "type": "string" },
+    { "key": "jwt_token", "value": "", "type": "string" }
+  ],
+  "item": [
+    {
+      "name": "1. Authentication",
+      "item": [
+        {
+          "name": "Login (Admin)",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"admin@ecosphere.org\",\n  \"password\": \"Admin@123456\"\n}"
+            },
+            "url": { "raw": "{{baseUrl}}/api/auth/login", "host": ["{{baseUrl}}"], "path": ["api", "auth", "login"] }
+          }
+        },
+        {
+          "name": "Get Current User Profile",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Authorization", "value": "Bearer {{jwt_token}}" }],
+            "url": { "raw": "{{baseUrl}}/api/auth/me", "host": ["{{baseUrl}}"], "path": ["api", "auth", "me"] }
+          }
+        }
+      ]
+    },
+    {
+      "name": "2. Live Environmental Telemetry",
+      "item": [
+        {
+          "name": "System Health & Provider Status",
+          "request": {
+            "method": "GET",
+            "url": { "raw": "{{baseUrl}}/api/live-data/status", "host": ["{{baseUrl}}"], "path": ["api", "live-data", "status"] }
+          }
+        },
+        {
+          "name": "Live Air Quality (Warangal / CPCB / OpenAQ)",
+          "request": {
+            "method": "GET",
+            "url": { "raw": "{{baseUrl}}/api/live-data/air-quality?city=Warangal", "host": ["{{baseUrl}}"], "path": ["api", "live-data", "air-quality"], "query": [{ "key": "city", "value": "Warangal" }] }
+          }
+        },
+        {
+          "name": "Live Weather (Open-Meteo)",
+          "request": {
+            "method": "GET",
+            "url": { "raw": "{{baseUrl}}/api/live-data/weather", "host": ["{{baseUrl}}"], "path": ["api", "live-data", "weather"] }
+          }
+        },
+        {
+          "name": "Surface Water Quality",
+          "request": {
+            "method": "GET",
+            "url": { "raw": "{{baseUrl}}/api/live-data/water-quality", "host": ["{{baseUrl}}"], "path": ["api", "live-data", "water-quality"] }
+          }
+        },
+        {
+          "name": "GBIF Biodiversity Occurrences",
+          "request": {
+            "method": "GET",
+            "url": { "raw": "{{baseUrl}}/api/live-data/biodiversity", "host": ["{{baseUrl}}"], "path": ["api", "live-data", "biodiversity"] }
+          }
+        },
+        {
+          "name": "NASA GIBS Satellite Metadata",
+          "request": {
+            "method": "GET",
+            "url": { "raw": "{{baseUrl}}/api/live-data/satellite", "host": ["{{baseUrl}}"], "path": ["api", "live-data", "satellite"] }
+          }
+        }
+      ]
+    },
+    {
+      "name": "3. Analytics & Indicators",
+      "item": [
+        {
+          "name": "Analytics Overview & KPIs",
+          "request": {
+            "method": "GET",
+            "url": { "raw": "{{baseUrl}}/api/analytics/overview", "host": ["{{baseUrl}}"], "path": ["api", "analytics", "overview"] }
+          }
+        },
+        {
+          "name": "Air Quality Trends",
+          "request": {
+            "method": "GET",
+            "url": { "raw": "{{baseUrl}}/api/analytics/air-quality?location=Warangal", "host": ["{{baseUrl}}"], "path": ["api", "analytics", "air-quality"] }
+          }
+        },
+        {
+          "name": "Export CSV Report",
+          "request": {
+            "method": "GET",
+            "url": { "raw": "{{baseUrl}}/api/analytics/export/csv?metric=air", "host": ["{{baseUrl}}"], "path": ["api", "analytics", "export", "csv"], "query": [{ "key": "metric", "value": "air" }] }
+          }
+        },
+        {
+          "name": "Export Executive PDF Report",
+          "request": {
+            "method": "GET",
+            "url": { "raw": "{{baseUrl}}/api/analytics/export/pdf", "host": ["{{baseUrl}}"], "path": ["api", "analytics", "export", "pdf"] }
+          }
+        }
+      ]
+    },
+    {
+      "name": "4. AI & Machine Learning",
+      "item": [
+        {
+          "name": "Predict AQI / Metric Horizon",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"target_metric\": \"AQI\",\n  \"horizon_hours\": 24,\n  \"location_name\": \"Warangal\"\n}"
+            },
+            "url": { "raw": "{{baseUrl}}/api/ai/predict", "host": ["{{baseUrl}}"], "path": ["api", "ai", "predict"] }
+          }
+        },
+        {
+          "name": "Anomaly Detection (IsolationForest)",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"metric\": \"AQI\",\n  \"threshold_sigma\": 2.0\n}"
+            },
+            "url": { "raw": "{{baseUrl}}/api/ai/anomaly-detection", "host": ["{{baseUrl}}"], "path": ["api", "ai", "anomaly-detection"] }
+          }
+        },
+        {
+          "name": "AI Prescriptive Recommendations",
+          "request": {
+            "method": "GET",
+            "url": { "raw": "{{baseUrl}}/api/ai/insights", "host": ["{{baseUrl}}"], "path": ["api", "ai", "insights"] }
+          }
+        }
+      ]
+    },
+    {
+      "name": "5. Optimization",
+      "item": [
+        {
+          "name": "Waste Collection Route (Dijkstra)",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": { "mode": "raw", "raw": "{}" },
+            "url": { "raw": "{{baseUrl}}/api/optimization/waste", "host": ["{{baseUrl}}"], "path": ["api", "optimization", "waste"] }
+          }
+        },
+        {
+          "name": "MCDA Resource Allocation",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"available_emergency_teams\": 4,\n  \"available_inspectors\": 6\n}"
+            },
+            "url": { "raw": "{{baseUrl}}/api/optimization/resources", "host": ["{{baseUrl}}"], "path": ["api", "optimization", "resources"] }
+          }
+        }
+      ]
+    },
+    {
+      "name": "6. IoT Ingestion Gateway",
+      "item": [
+        {
+          "name": "Ingest Waste Smart Bin Reading",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"bin_id\": \"BIN-WAR-001\",\n  \"fill_percentage\": 88.5,\n  \"waste_type\": \"MUNICIPAL_SOLID\",\n  \"waste_weight_kg\": 120.4,\n  \"location_name\": \"Hanamkonda Bus Station\",\n  \"latitude\": 17.9821,\n  \"longitude\": 79.5781\n}"
+            },
+            "url": { "raw": "{{baseUrl}}/api/iot/waste/readings", "host": ["{{baseUrl}}"], "path": ["api", "iot", "waste", "readings"] }
+          }
+        },
+        {
+          "name": "Ingest Smart Energy Meter Reading",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"meter_id\": \"MTR-TEL-004\",\n  \"energy_kwh\": 450.2,\n  \"power_kw\": 38.6,\n  \"renewable_kwh\": 110.0,\n  \"energy_source\": \"SOLAR_HYBRID\",\n  \"location_name\": \"Warangal Municipal Complex\"\n}"
+            },
+            "url": { "raw": "{{baseUrl}}/api/iot/energy/readings", "host": ["{{baseUrl}}"], "path": ["api", "iot", "energy", "readings"] }
+          }
+        },
+        {
+          "name": "Ingest Submerged Water Quality Probe",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"probe_id\": \"IOT-WTR-WAR-01\",\n  \"water_body\": \"Waddepally Lake\",\n  \"ph\": 7.4,\n  \"dissolved_oxygen\": 6.8,\n  \"bod\": 2.5,\n  \"turbidity\": 4.2,\n  \"tds\": 240.0,\n  \"temperature_c\": 26.2\n}"
+            },
+            "url": { "raw": "{{baseUrl}}/api/iot/water/readings", "host": ["{{baseUrl}}"], "path": ["api", "iot", "water", "readings"] }
+          }
+        }
+      ]
+    },
+    {
+      "name": "7. Public Citizen Portal",
+      "item": [
+        {
+          "name": "Submit Environmental Grievance",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"citizen_name\": \"Ramesh Varma\",\n  \"citizen_email\": \"ramesh@example.com\",\n  \"category\": \"AIR_POLLUTION\",\n  \"title\": \"Excessive black smoke near Kakatiya bypass\",\n  \"description\": \"Continuous burning of industrial plastic residue.\",\n  \"location_name\": \"Kazipet, Warangal\",\n  \"latitude\": 17.9620,\n  \"longitude\": 79.6050\n}"
+            },
+            "url": { "raw": "{{baseUrl}}/api/portal/reports", "host": ["{{baseUrl}}"], "path": ["api", "portal", "reports"] }
+          }
+        },
+        {
+          "name": "Track Grievance by Code",
+          "request": {
+            "method": "GET",
+            "url": { "raw": "{{baseUrl}}/api/portal/reports/track/ECO-849201", "host": ["{{baseUrl}}"], "path": ["api", "portal", "reports", "track", "ECO-849201"] }
+          }
+        }
+      ]
+    }
+  ]
+}
